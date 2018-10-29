@@ -1,4 +1,4 @@
-# arachne
+# arachno
 
 Utility to orchestrate coroutines via DSL.
 

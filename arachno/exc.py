@@ -1,6 +1,6 @@
 
 
-class ArachneError(Exception):
+class ArachnoError(Exception):
     def __init__(self, message, details):
         super().__init__(message)
         self.message = message
@@ -13,18 +13,18 @@ class ArachneError(Exception):
         }
 
 
-class ValidationError(ArachneError):
+class ValidationError(ArachnoError):
     def __str__(self):
         return ";".join(["{} {}".format(k, v) for k, v in self.details.items()])
 
 
-class VarNotFountError(ArachneError):
+class VarNotFountError(ArachnoError):
     pass
 
 
-class VarAlreadyDefinedError(ArachneError):
+class VarAlreadyDefinedError(ArachnoError):
     pass
 
 
-class ConfigurationError(ArachneError):
+class ConfigurationError(ArachnoError):
     pass

@@ -1,5 +1,5 @@
 from attr import fields_dict
-from arachne.exc import ConfigurationError
+from .exc import ConfigurationError
 
 
 def assert_fields(cls, obj: dict) -> None:
