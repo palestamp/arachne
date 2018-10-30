@@ -203,7 +203,7 @@ class Action:
             action_name=self.name,
             variables=self._resolve_defines(result) if not result.failed else {},
             failed=result.failed,
-            data=None if self.options.suppress else result,  # pylint: disable=no-member
+            data=None if self.options.suppress else result.json,  # pylint: disable=no-member
             took=took,
         )
 

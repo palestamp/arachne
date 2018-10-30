@@ -53,7 +53,7 @@ class Node:
 
     async def run(self, context):
         output = await self._run(context)
-        context.set_result(self.action.name, output.as_obj())
+        context.set_result(self.action.name, output)
         self._signal_event()
         return output
 
