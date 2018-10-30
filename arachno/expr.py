@@ -25,8 +25,10 @@ class Expression:
         self.captures = captures
 
     def resolve(self, vartree):
-        it = (str(c.resolve(vartree)) for c in self.captures)
-        return "".join(it)
+        items = [c.resolve(vartree) for c in self.captures]
+        if len(items) == 1:
+            return items[0]
+        return "".join((str(el) for el in items))
 
     def requires(self):
         r = (c.requires() for c in self.captures)
