@@ -160,15 +160,8 @@ class Action:
         recur(_collect, self.args)
         return set(out)
 
-    def substitute_args(self, vartree):
-        def _resolve(node, vartree=None):
-            if isinstance(node, Expression):
-                return node.resolve(vartree)
-            return node
-        return recur(_resolve, self.args, vartree=vartree)
-
     async def _run(self, context, loop=None):
-        args = self.substitute_args(context.vartree)
+        args = substitute_args(self.args, context.vartree)
         module = context.modules[self.module]
         coro = module.dispatch(self.operation, context.session, **args)
         start = time.monotonic()
@@ -179,7 +172,6 @@ class Action:
         reason = context.action_invalidated(self.name)
         if reason is not None:
             return Output(
-                action_name=self.name,
                 failed=True,
                 failure_details={
                     "_type": "invalidated",
@@ -191,7 +183,6 @@ class Action:
             result, took = await self._run(context, loop=loop)
         except asyncio.TimeoutError:
             return Output(
-                action_name=self.name,
                 failed=True,
                 failure_details={
                     "_type": "timeout",
@@ -199,11 +190,12 @@ class Action:
                 },
             )
 
+        # omit data only if result is successful and suppress option is on
+        omit_data = not result.failed and self.options.suppress  # pylint: disable=no-member
         return Output(
-            action_name=self.name,
             variables=self._resolve_defines(result) if not result.failed else {},
             failed=result.failed,
-            data=None if self.options.suppress else result.json,  # pylint: disable=no-member
+            data=result.json if not omit_data else None,
             took=took,
         )
 
@@ -216,7 +208,6 @@ class Action:
 
 @attrs
 class Output:
-    action_name = attrib(validator=attrv.instance_of(str))
     failed = attrib(validator=attrv.instance_of(bool))
     failure_details = attrib(validator=attrv.instance_of(dict), factory=dict)
     variables = attrib(validator=attrv.instance_of(dict), factory=dict)
@@ -262,3 +253,11 @@ def _wrap_expression(value):
     if is_dynamic:
         return Expression(expr)
     return value
+
+
+def substitute_args(args, vartree):
+    def _resolve(node, vartree=None):
+        if isinstance(node, Expression):
+            return node.resolve(vartree)
+        return node
+    return recur(_resolve, args, vartree=vartree)
