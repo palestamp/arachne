@@ -4,7 +4,7 @@ from typing import Dict, List
 
 from toposort import toposort
 
-from .action import Action
+from .request import Action
 from .internal import recur
 
 

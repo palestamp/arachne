@@ -3,7 +3,7 @@ from .expr import VarTree
 from .planner import plan_granular
 
 
-class ExecutionContext:
+class _ExecutionContext:
     def __init__(self, session, modules, dependency_map=None, variables=None):
         self.session = session
         self.modules = modules
@@ -58,7 +58,7 @@ async def execute(request, session, modules, variables=None):
     validate_modules(request, modules)
 
     plan = plan_granular(request.actions)
-    context = ExecutionContext(
+    context = _ExecutionContext(
         session=session,
         modules=modules,
         variables=variables,
