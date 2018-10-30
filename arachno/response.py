@@ -1,8 +1,8 @@
 from html import escape
 from typing import Any
+import json
 
 import jmespath
-import ujson
 
 class JmespathResolver:
     def resolve(self, definition: Any, data: dict) -> Any:
@@ -19,10 +19,6 @@ class Response:
         return self._resolver.resolve(definition, self.json)
 
 
-def ujson_loads(data):
-    return ujson.loads(data)
-
-
 def success(data):
     return Response(data, failed=False)
 
@@ -31,7 +27,7 @@ def failure(data):
     return Response(data, failed=True)
 
 
-async def from_aiohttp(response, json_only=True):
+async def from_aiohttp(response, json_only=True, loads=json.loads):
     obj = None
     failed = False
 
@@ -43,7 +39,7 @@ async def from_aiohttp(response, json_only=True):
         }
 
     try:
-        obj = await response.json(loads=ujson_loads)
+        obj = await response.json(loads=loads)
     except Exception as e:
         if json_only:
             failed = True

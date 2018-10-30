@@ -1,6 +1,5 @@
 jmespath
 toposort
-ujson
 attr
 cached_property
 typing_extensions
