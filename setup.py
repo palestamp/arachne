@@ -22,7 +22,7 @@ setup(
     description='DSL for coroutine orchestration',
     packages=find_packages(exclude=['tests']),
     install_requires=parse_requirements(REQUIREMENTS_PATH),
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     zip_safe=False,
     classifiers=[
         "Programming Language :: Python :: 3",
