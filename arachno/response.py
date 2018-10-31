@@ -43,6 +43,6 @@ async def from_aiohttp(response, json_only=True, loads=json.loads):
     except Exception as e:
         if json_only:
             failed = True
-        obj = {"text": str(e)}
+        obj = {"text": str(e), "code": response.status}
 
     return Response(json=obj, failed=failed)

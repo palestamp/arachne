@@ -12,4 +12,4 @@ class BaseModule:
         return kwargs
 
     def get_operation(self, operation_name):
-        return getattr(self, operation_name)
+        return getattr(self, operation_name, None)

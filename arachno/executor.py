@@ -52,7 +52,7 @@ def validate_modules(request, modules):
         )
 
 
-async def execute(request, session, modules, variables=None):
+async def execute(request, session, modules, variables=None, explain=False):
     variables = variables or {}
     validate_variables(request, variables)
     validate_modules(request, modules)
@@ -67,10 +67,14 @@ async def execute(request, session, modules, variables=None):
 
     await plan.object_plan.run(context)
 
-    return {
+    out = {
         "result": context.result,
-        "plan": plan.as_obj(),
     }
+
+    if explain:
+        out["plan"] = plan.as_obj()
+
+    return out
 
 
 def build_dependency_map(dependency_graph):
