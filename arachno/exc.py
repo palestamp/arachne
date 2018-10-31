@@ -12,11 +12,12 @@ class ArachnoError(Exception):
             "details": self.details,
         }
 
+    def __str__(self):
+        return "{}: {}".format(self.message, self.details)
+
 
 class ValidationError(ArachnoError):
-    def __str__(self):
-        return ";".join(["{} {}".format(k, v) for k, v in self.details.items()])
-
+    pass
 
 class VarNotFountError(ArachnoError):
     pass

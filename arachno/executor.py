@@ -42,7 +42,8 @@ def validate_variables(request, variables):
 
 def validate_modules(request, modules):
     user_mods = set(modules)
-    req_mods = request.required_modules
+    req_operations = request.required_modules
+    req_mods = set(e[0] for e in req_operations)
 
     missing = req_mods.difference(user_mods)
     if missing:
@@ -50,6 +51,20 @@ def validate_modules(request, modules):
             message="unknown modules",
             details=list(missing),
         )
+
+    unknown_operations = set()
+    for mod, operation_name in req_operations:
+        module = modules[mod]
+        operation = module.get_operation(operation_name)
+        if not operation:
+            unknown_operations.add(f"{mod}.{operation_name}")
+
+    if unknown_operations:
+        raise ValidationError(
+            message="unknown operations",
+            details=list(unknown_operations),
+        )
+
 
 
 async def execute(request, session, modules, variables=None, explain=False):
