@@ -15,7 +15,7 @@ def parse_requirements(filename):
 
 setup(
     name='arachno',
-    version='0.2.0',
+    version='0.2.1',
     url='https://github.com/palestamp/arachno',
     author='Stas Kazhavets',
     author_email='stas.kozhevets@gmail.com',

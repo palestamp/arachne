@@ -1,6 +1,6 @@
 import asyncio
 import time
-from copy import copy
+from copy import copy, deepcopy
 from datetime import timedelta
 from typing import Any, Dict
 
@@ -62,6 +62,7 @@ class Request:
     @classmethod
     def from_obj(cls, obj):
         assert_fields(cls, obj)
+        obj = deepcopy(obj)
         obj["actions"] = {
             n: Action.from_obj(a, name=n)
             for n, a in obj["actions"].items()
