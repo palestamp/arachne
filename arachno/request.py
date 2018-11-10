@@ -164,7 +164,7 @@ class Action:
     async def _run(self, context, loop=None):
         args = substitute_args(self.args, context.vartree)
         module = context.modules[self.module]
-        coro = module.dispatch(self.operation, context.session, **args)
+        coro = module.dispatch(self.operation, **args)
         start = time.monotonic()
         result = await asyncio.wait_for(coro, timeout=self.options.timeout.seconds(), loop=loop)  # pylint: disable=no-member
         return result, time.monotonic() - start

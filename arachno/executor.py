@@ -4,8 +4,7 @@ from .planner import plan_granular
 
 
 class _ExecutionContext:
-    def __init__(self, session, modules, dependency_map=None, variables=None):
-        self.session = session
+    def __init__(self, modules, dependency_map=None, variables=None):
         self.modules = modules
         self.dependency_map = dependency_map
         self.result = {}
@@ -67,14 +66,13 @@ def validate_modules(request, modules):
 
 
 
-async def execute(request, session, modules, variables=None, explain=False):
+async def execute(request, modules, variables=None, explain=False):
     variables = variables or {}
     validate_variables(request, variables)
     validate_modules(request, modules)
 
     plan = plan_granular(request.actions)
     context = _ExecutionContext(
-        session=session,
         modules=modules,
         variables=variables,
         dependency_map=build_dependency_map(plan.dependency_graph)

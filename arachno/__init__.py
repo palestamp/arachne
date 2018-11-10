@@ -3,10 +3,10 @@ from .request import Request, Action, Options, Duration
 from .executor import execute
 
 class BaseModule:
-    async def dispatch(self, operation_name, session, **kwargs):
+    async def dispatch(self, operation_name, **kwargs):
         operation = self.get_operation(operation_name)
         kwargs = self.prepare_arguments(operation_name, **kwargs)
-        return await operation(session, **kwargs)
+        return await operation(**kwargs)
 
     def prepare_arguments(self, operation_name, **kwargs):
         return kwargs
